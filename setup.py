@@ -13,6 +13,7 @@ OPTIONS = {
         'LSUIElement': True,
     },
     'packages': ['rumps'],
+    'includes': ['keychain']
 }
 
 setup(

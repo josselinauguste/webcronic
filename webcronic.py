@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import rumps
 from rumps import *
 import threading
@@ -5,19 +7,27 @@ import urllib2
 import base64
 import xml.etree.ElementTree as ET
 import dateutil.parser
+import keychain
 
 class WebcronicStatusBarApp(rumps.App):
-    API_USERNAME = ''
-    API_PASSWORD = ''
-
     def __init__(self):
         super(WebcronicStatusBarApp, self).__init__("Webcronic")
         self.title = None
         self.icon = 'webcronic-small.png'
 
         self.erroneous_monitors = []
+        self.load_credentials()
 
         self.update_monitors_states()
+
+    def load_credentials(self):
+        session_keychain = keychain.Keychain()
+        infos = session_keychain.get_generic_password('login', None, 'webcronic')
+        if isinstance(infos, dict):
+            self.API_USERNAME = infos['account']
+            self.API_PASSWORD = infos['password']
+        else:
+            rumps.alert("Vous devez créer un élément 'webcronic' dans le trousseau d'accès !")
 
     def update_monitors_states(self):
         try:
