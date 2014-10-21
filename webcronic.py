@@ -37,7 +37,7 @@ class WebcronicStatusBarApp(rumps.App):
         else:
             for monitor in erroneous_monitors:
                 if not monitor in self.erroneous_monitors:
-                    rumps.notification('Serveur indisponible', '', '%s est injoignable depuis %s' % (monitor['name'], monitor['since'].strftime('%H:%m')))
+                    rumps.notification('Serveur indisponible', '', '%s est injoignable depuis %s' % (monitor['name'], monitor['since'].strftime('%H:%M')))
             for monitor in self.erroneous_monitors:
                 if not monitor in erroneous_monitors:
                     rumps.notification('Serveur disponible', '', '%s est de nouveau joignable' % monitor['name'])
@@ -64,7 +64,7 @@ class WebcronicStatusBarApp(rumps.App):
     def build_menu(self):
         menu = []
         for monitor in self.erroneous_monitors:
-            menu.append('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%m')))
+            menu.append('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%M')))
         self.menu = menu
 
 if __name__ == "__main__":
