@@ -18,7 +18,7 @@ class WebcronicStatusBarApp(rumps.App):
         self.erroneous_monitors = []
         self.load_credentials()
 
-        self.update_monitors_states()
+        threading.Timer(1, self.update_monitors_states).start()
 
     def load_credentials(self):
         session_keychain = keychain.Keychain()
@@ -62,10 +62,11 @@ class WebcronicStatusBarApp(rumps.App):
         return ET.fromstring(handle.read())
 
     def build_menu(self):
-        menu = []
+        self.menu.clear()
         for monitor in self.erroneous_monitors:
-            menu.append('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%M')))
-        self.menu = menu
+            self.menu.add('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%M')))
+        self.menu.add('Quit')
+        self.menu['Quit']._menuitem.setAction_('terminate:')
 
 if __name__ == "__main__":
     app = WebcronicStatusBarApp()
