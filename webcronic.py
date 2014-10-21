@@ -37,7 +37,7 @@ class WebcronicStatusBarApp(rumps.App):
         threading.Timer(60*2, self.update_monitors_states).start()
 
     def get_erroneous_monitors(self):
-        root = self.get_monitors_statuses
+        root = self.get_monitors_statuses()
         erroneous_monitors = []
         for child in root:
             if child.attrib['enabled'] == '1' and child.attrib['state'] == 'error':
