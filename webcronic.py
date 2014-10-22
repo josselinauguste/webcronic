@@ -32,8 +32,8 @@ class WebcronicStatusBarApp(rumps.App):
     def update_monitors_states(self):
         try:
             erroneous_monitors = self.get_erroneous_monitors()
-        except urllib2.URLError as e:
-            rumps.alert(e)
+        except urllib2.URLError:
+            pass
         else:
             for monitor in erroneous_monitors:
                 if not monitor in self.erroneous_monitors:
