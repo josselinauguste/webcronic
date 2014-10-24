@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: ISO-8859-15 -*-
 
 import rumps
 from rumps import *
@@ -12,10 +12,12 @@ import keychain
 class WebcronicStatusBarApp(rumps.App):
     def __init__(self):
         super(WebcronicStatusBarApp, self).__init__("Webcronic")
-        self.title = None
-        self.icon = 'webcronic-small.png'
 
         self.erroneous_monitors = []
+
+        self.title = None
+        self.set_icon()
+
         self.load_credentials()
 
         threading.Timer(1, self.update_monitors_states).start()
@@ -27,7 +29,7 @@ class WebcronicStatusBarApp(rumps.App):
             self.API_USERNAME = infos['account']
             self.API_PASSWORD = infos['password']
         else:
-            rumps.alert("Vous devez crÃ©er un Ã©lÃ©ment 'webcronic' dans le trousseau d'accÃ¨s !")
+            rumps.alert("Vous devez créer un élément 'webcronic' dans le trousseau d'accès !")
 
     def update_monitors_states(self):
         try:
@@ -43,6 +45,7 @@ class WebcronicStatusBarApp(rumps.App):
                     rumps.notification('Serveur disponible', '', '%s est de nouveau joignable' % monitor['name'])
             self.erroneous_monitors = erroneous_monitors
 
+        self.set_icon()
         self.build_menu()
         threading.Timer(60*2, self.update_monitors_states).start()
 
@@ -63,10 +66,17 @@ class WebcronicStatusBarApp(rumps.App):
 
     def build_menu(self):
         self.menu.clear()
-        for monitor in self.erroneous_monitors:
-            self.menu.add('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%M')))
-        self.menu.add('Quit')
-        self.menu['Quit']._menuitem.setAction_('terminate:')
+        if len(self.erroneous_monitors) > 0:
+            for monitor in self.erroneous_monitors:
+                self.menu.add('%s (depuis %s)' % (monitor['name'], monitor['since'].strftime('%H:%M')))
+        else:
+            self.menu.add('Aucun problème à déplorer actuellement :-)')
+
+    def set_icon(self):
+        if len(self.erroneous_monitors) > 0:
+            self.icon = 'webcronic-small-error.png'
+        else:
+            self.icon = 'webcronic-small.png'
 
 if __name__ == "__main__":
     app = WebcronicStatusBarApp()
